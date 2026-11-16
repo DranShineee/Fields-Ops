@@ -213,17 +213,98 @@ async function applySchema(connection) {
 
 async function dropTables(connection) {
   await connection.query('SET FOREIGN_KEY_CHECKS = 0');
-  for (const table of ['products', 'categories', 'sessions', 'users']) {
+  for (const table of ['orders', 'products', 'categories', 'sessions', 'users']) {
     await connection.query(`DROP TABLE IF EXISTS \`${table}\``);
   }
   await connection.query('SET FOREIGN_KEY_CHECKS = 1');
   console.log('Tabel lama dihapus (--fresh).');
 }
 
+async function seedOrders(connection) {
+  const [[{ total }]] = await connection.query('SELECT COUNT(*) AS total FROM orders');
+  if (total > 0) return;
+
+  const [[buyer]] = await connection.query(
+    "SELECT id, name, phone FROM users WHERE email = 'buyer@fieldsops.id' LIMIT 1",
+  );
+  if (!buyer) return;
+
+  const orders = [
+    {
+      code: 'FO-DEMO01',
+      productId: 5,
+      qty: 2,
+      method: 'full',
+      channel: 'transfer',
+      status: 'diproses',
+      address: 'Jl. Tebet Raya No. 24, Jakarta Selatan',
+      city: 'Jakarta Selatan',
+      postal: '12820',
+    },
+    {
+      code: 'FO-DEMO02',
+      productId: 9,
+      qty: 1,
+      method: 'cod',
+      channel: null,
+      status: 'dikirim',
+      address: 'Komp. Griya Asri Blok C7, Bandung',
+      city: 'Bandung',
+      postal: '40286',
+    },
+  ];
+
+  for (const order of orders) {
+    const [[product]] = await connection.query(
+      `SELECT p.id, p.seller_id, p.name, p.image_url, p.price, u.name AS seller_name
+       FROM products p JOIN users u ON u.id = p.seller_id
+       WHERE p.id = ? LIMIT 1`,
+      [order.productId],
+    );
+    if (!product) continue;
+
+    const subtotal = Number(product.price) * order.qty;
+    const shipping = subtotal >= 2000000 ? 0 : 25000;
+    const codFee = order.method === 'cod' ? 15000 : 0;
+
+    await connection.query(
+      `INSERT INTO orders
+        (order_code, user_id, product_id, seller_id, product_name, product_image, seller_name,
+         customer_name, customer_phone, shipping_address, city, postal_code, qty, unit_price,
+         shipping_cost, cod_fee, total, payment_method, payment_channel, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        order.code,
+        buyer.id,
+        product.id,
+        product.seller_id,
+        product.name,
+        product.image_url,
+        product.seller_name,
+        buyer.name,
+        buyer.phone,
+        order.address,
+        order.city,
+        order.postal,
+        order.qty,
+        product.price,
+        shipping,
+        codFee,
+        subtotal + shipping + codFee,
+        order.method,
+        order.channel,
+        order.status,
+      ],
+    );
+  }
+  console.log(`Seed pesanan demo: ${orders.length} pesanan.`);
+}
+
 async function seed(connection) {
   const [[{ total }]] = await connection.query('SELECT COUNT(*) AS total FROM users');
   if (total > 0) {
-    console.log(`Seed dilewati: sudah ada ${total} pengguna.`);
+    console.log(`Seed dilewati: sudah ada ${total} pengguna (pesanan demo tetap dicek).`);
+    await seedOrders(connection);
     return;
   }
 
@@ -272,6 +353,7 @@ async function seed(connection) {
   console.log(
     `Seed selesai: ${SEED_USERS.length} pengguna, ${SEED_CATEGORIES.length} kategori, ${SEED_PRODUCTS.length} produk.`,
   );
+  await seedOrders(connection);
 }
 
 async function main() {
@@ -291,7 +373,8 @@ async function main() {
     if (fresh || forceSeed) {
       await seed(connection);
     } else {
-      console.log('Tidak ada seed baru. Gunakan `npm run seed` untuk mengisi data dummy.');
+      await seedOrders(connection);
+      console.log('Skema diperbarui. Gunakan `npm run seed` untuk mengisi data dummy lengkap.');
     }
   } finally {
     await connection.end();

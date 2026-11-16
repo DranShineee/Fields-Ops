@@ -4,35 +4,35 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= title ? title + ' — FieldsOps' : 'FieldsOps' %></title>
-  <meta name="description" content="FieldsOps — marketplace peralatan, safety, dan layanan lapangan dengan pemesanan langsung via WhatsApp." />
+  <meta name="description" content="FieldsOps — marketplace peralatan, safety, dan jasa lapangan. Bayar penuh atau COD, pesanan diproses langsung oleh admin." />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/app.css" />
 </head>
 <body>
 <a href="#main" class="skip-link">Langsung ke konten</a>
 
-<div class="topbar">
-  <div class="wrap topbar-inner">
-    <span><span class="dot"></span>Pengadaan &amp; perawatan peralatan lapangan — Senin s.d. Sabtu, 08.00–17.00 WIB</span>
-    <span>Pemesanan langsung melalui <strong>WhatsApp admin</strong></span>
-  </div>
-</div>
-
-<header class="site-header">
-  <div class="wrap header-inner">
-    <a class="brand" href="/">
-      <span class="logo" aria-hidden="true">FO</span>
+<header class="site-header" data-header>
+  <div class="header-shell">
+    <a class="brand" href="/" aria-label="FieldsOps — beranda">
+      <span class="logo-mark" aria-hidden="true">FO</span>
       <span class="brand-text">
         <strong>FieldsOps</strong>
-        <small>Service Marketplace &amp; Management</small>
+        <small>Marketplace Lapangan</small>
       </span>
     </a>
 
-    <nav class="nav" aria-label="Navigasi utama">
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="main-nav">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="sr-only">Buka menu navigasi</span>
+    </button>
+
+    <nav class="main-nav" id="main-nav" data-nav aria-label="Navigasi utama">
       <a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">Katalog</a>
 
       <% if (currentUser && currentUser.role === 'admin') { %>
-        <a href="/admin" class="nav-link <%= currentPath.startsWith('/admin') && currentPath !== '/admin/users' && currentPath !== '/admin/laporan' ? 'active' : '' %>">Dasbor</a>
+        <a href="/admin" class="nav-link <%= currentPath.startsWith('/admin') && !currentPath.startsWith('/admin/users') && currentPath !== '/admin/laporan' ? 'active' : '' %>">Dasbor</a>
         <a href="/admin/users" class="nav-link <%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">Pengguna</a>
         <a href="/admin/laporan" class="nav-link <%= currentPath === '/admin/laporan' ? 'active' : '' %>">Laporan</a>
       <% } else if (currentUser && currentUser.role === 'seller') { %>
@@ -41,26 +41,30 @@
         <a href="/seller/categories" class="nav-link <%= currentPath.startsWith('/seller/categories') ? 'active' : '' %>">Kategori</a>
       <% } %>
 
+      <a href="/#cara-pesan" class="nav-link">Cara Pesan</a>
+      <a href="/#kontak" class="nav-link">Kontak</a>
+    </nav>
+
+    <div class="header-actions">
       <% if (currentUser) { %>
-        <a href="/akun" class="nav-link <%= currentPath === '/akun' ? 'active' : '' %>">Akun</a>
-        <span class="user-chip">
+        <a href="/akun" class="user-chip" title="Akun saya">
           <span class="avatar" aria-hidden="true"><%= currentUser.name.trim().charAt(0).toUpperCase() %></span>
           <span class="user-meta">
             <strong><%= currentUser.name %></strong>
             <small><%= f.roleLabel(currentUser.role) %></small>
           </span>
-        </span>
+        </a>
         <form method="post" action="/logout" class="inline-form">
           <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <button type="submit" class="btn btn-ghost btn-sm">Keluar</button>
         </form>
       <% } else { %>
-        <a href="/login" class="nav-link <%= currentPath === '/login' ? 'active' : '' %>">Masuk</a>
-        <a href="/register" class="btn btn-primary btn-sm">Daftar pembeli</a>
+        <a href="/login" class="nav-link nav-login">Masuk</a>
+        <a href="/register" class="btn btn-primary btn-sm">Daftar</a>
       <% } %>
-    </nav>
+    </div>
   </div>
 </header>
 
-<main id="main" class="wrap page">
+<main id="main" class="page wrap">
   <%- include('flash') %>

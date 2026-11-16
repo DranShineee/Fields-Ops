@@ -2,8 +2,9 @@
 
 <div class="view-head">
   <div>
+    <span class="eyebrow">Akun</span>
     <h1>Akun saya</h1>
-    <p class="muted">Kelola data profil dan hubungi admin untuk pemesanan.</p>
+    <p class="section-sub">Kelola data profil, lihat pesanan, dan hubungi admin untuk konfirmasi pembayaran.</p>
   </div>
   <span class="pill"><%= f.roleLabel(currentUser.role) %></span>
 </div>
@@ -48,7 +49,7 @@
   <aside class="card card-pad contact-card">
     <div class="panel-head"><h2>Hubungi admin</h2></div>
     <% if (admin && adminWa) { %>
-      <p class="muted">Semua pemesanan dan pertanyaan diproses langsung oleh admin.</p>
+      <p class="muted">Semua pemesanan dan konfirmasi pembayaran diproses langsung oleh admin.</p>
       <div class="contact-person">
         <span class="avatar lg"><%= admin.name.trim().charAt(0).toUpperCase() %></span>
         <div>
@@ -68,5 +69,53 @@
     <% } %>
   </aside>
 </div>
+
+<section class="card card-pad" id="pesanan">
+  <div class="panel-head">
+    <h2>Pesanan saya</h2>
+    <a class="btn btn-sm btn-ghost" href="/#produk">Belanja lagi</a>
+  </div>
+
+  <% if (orders.length === 0) { %>
+    <div class="empty compact">
+      <strong>Belum ada pesanan</strong>
+      <p class="muted">Pesanan yang Anda buat akan muncul di sini beserta statusnya.</p>
+      <a class="btn btn-primary" href="/">Lihat katalog</a>
+    </div>
+  <% } else { %>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Pesanan</th><th>Metode</th><th class="num">Total</th><th>Status</th><th class="num">Aksi</th></tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(function (order) { %>
+            <tr>
+              <td>
+                <div class="product-cell">
+                  <img class="thumb" src="<%= order.product_image %>" alt="" />
+                  <div>
+                    <span class="tname"><%= order.product_name %></span>
+                    <span class="tsub"><%= order.order_code %> · <%= order.qty %> unit</span>
+                  </div>
+                </div>
+              </td>
+              <td><%= paymentLabel(order.payment_method) %></td>
+              <td class="num"><%= f.formatRupiah(order.total) %></td>
+              <td>
+                <span class="status-badge status-<%= (ORDER_STATUS[order.status] || {}).tone || 'info' %>">
+                  <%= (ORDER_STATUS[order.status] || {}).label || order.status %>
+                </span>
+              </td>
+              <td class="actions">
+                <a class="btn btn-sm" href="/pesanan/<%= order.order_code %>">Detail</a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
 
 <%- include('../partials/footer') %>

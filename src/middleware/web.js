@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { queryOne } from '../db.js';
+import { attachAdminContact } from '../utils/contact.js';
 import * as format from '../utils/format.js';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -93,6 +94,8 @@ export function setFlash(req, type, message) {
 }
 
 /** Variabel yang tersedia di semua template. */
+export const attachContact = attachAdminContact;
+
 export function viewLocals(req, res, next) {
   res.locals.currentPath = req.path;
   res.locals.currentYear = new Date().getFullYear();

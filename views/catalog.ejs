@@ -1,85 +1,188 @@
 <%- include('partials/head') %>
 
-<section class="hero">
-  <div class="hero-copy">
-    <span class="hero-tag">Katalog resmi</span>
-    <h1>Peralatan, safety, dan jasa lapangan dari seller terverifikasi.</h1>
-    <p>Cari produk berdasarkan nama atau kategori, lalu selesaikan pemesanan langsung dengan admin melalui WhatsApp. Stok dan harga selalu diperbarui oleh seller.</p>
-    <div class="hero-actions">
-      <% if (adminWa) { %>
-        <a class="btn btn-wa" href="<%= adminWa %>" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39a9.86 9.86 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.1.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.26.86 5.82 2.42a8.17 8.17 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.25 8.24Zm4.52-6.17c-.25-.12-1.47-.72-1.69-.8-.23-.09-.39-.13-.55.12-.16.25-.64.8-.79.96-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23a7.4 7.4 0 0 1-1.38-1.72c-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.41.06-.63.31-.21.25-.82.8-.82 1.96 0 1.16.84 2.27.96 2.43.12.16 1.65 2.52 4.01 3.53.56.24 1 .38 1.34.49.56.18 1.07.15 1.47.09.45-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
-          Hubungi admin
-        </a>
-      <% } %>
-      <a class="btn" href="#produk">Lihat katalog</a>
+<% const slides = [
+  {
+    art: 'hero-1',
+    tag: '#FieldsOpsUntukLapangan',
+    title: 'Peralatan &amp; layanan untuk tim lapangan.',
+    sub: 'Satu katalog untuk perkakas, safety, alat ukur, dan jasa inspeksi — dipesan langsung ke admin, dibayar penuh atau COD.',
+    note: '12 produk siap kirim'
+  },
+  {
+    art: 'hero-2',
+    tag: '#BayarSesuaiCaraAnda',
+    title: 'Bayar penuh atau bayar di tempat.',
+    sub: 'Pilih transfer bank, QRIS, atau COD saat kurir tiba. Semua pesanan tercatat dengan kode unik dan status yang jelas.',
+    note: 'COD tersedia di seluruh Indonesia'
+  },
+  {
+    art: 'hero-3',
+    tag: '#SellerTerverifikasi',
+    title: 'Dikelola seller, diproses admin.',
+    sub: 'Seller mengelola stok dan kategori, admin memverifikasi pesanan dan pengiriman. Katalog selalu memperlihatkan stok terbaru.',
+    note: '3 seller aktif'
+  }
+]; %>
+
+<section class="hero" aria-label="Sorotan FieldsOps">
+  <div class="hero-main">
+    <div class="hero-slider" data-slider>
+      <% slides.forEach(function (slide, index) { %>
+        <article class="hero-slide <%= index === 0 ? 'is-active' : '' %>" data-slide>
+          <div class="hero-art <%= slide.art %>" aria-hidden="true"></div>
+          <div class="hero-shade" aria-hidden="true"></div>
+          <div class="hero-copy">
+            <span class="hero-hashtag"><%= slide.tag %></span>
+            <h1><%- slide.title %></h1>
+            <p class="hero-sub"><%= slide.sub %></p>
+            <div class="hero-actions">
+              <a class="btn btn-primary btn-lg" href="#produk">
+                Jelajahi katalog
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+              <a class="btn btn-ghost-light btn-lg" href="#cara-pesan">Cara pesan</a>
+            </div>
+            <ul class="hero-points">
+              <li><span class="hero-dot"></span><%= slide.note %></li>
+              <li><span class="hero-dot"></span>Respon admin &lt; 5 menit</li>
+              <li><span class="hero-dot"></span>Garansi resmi seller</li>
+            </ul>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+
+    <div class="hero-controls">
+      <span class="hero-counter" data-counter>1 / <%= slides.length %></span>
+      <div class="hero-buttons">
+        <button type="button" class="hero-nav-btn" data-prev aria-label="Sorotan sebelumnya">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
+        </button>
+        <button type="button" class="hero-nav-btn" data-next aria-label="Sorotan berikutnya">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
   </div>
-  <ul class="hero-points">
-    <li><strong><%= products.length %></strong> produk siap dipesan</li>
-    <li><strong><%= categories.length %></strong> kategori aktif</li>
-    <li>Pemesanan tanpa biaya platform</li>
-  </ul>
+
+  <aside class="hero-side">
+    <% const featured = products.find(function (p) { return p.is_featured; }) || products[0]; %>
+    <% if (featured) { %>
+      <a class="side-card" href="/produk/<%= featured.id %>">
+        <img src="<%= featured.image_url %>" alt="<%= featured.name %>" />
+        <span class="side-card-shade" aria-hidden="true"></span>
+        <span class="side-card-copy">
+          <small>Produk unggulan</small>
+          <strong><%= featured.name %></strong>
+          <span><%= f.formatRupiah(featured.price) %></span>
+        </span>
+      </a>
+    <% } else { %>
+      <div class="side-card side-card-empty"><span>Belum ada produk unggulan</span></div>
+    <% } %>
+
+    <div class="side-list">
+      <h2>Temukan FieldsOps</h2>
+      <ul>
+        <li><a href="#produk"><span>Katalog produk</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></a></li>
+        <li><a href="#cara-pesan"><span>Cara pesan &amp; pembayaran</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></a></li>
+        <li><a href="#metode-pembayaran"><span>Bayar penuh atau COD</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></a></li>
+        <li><a href="/akun"><span>Pesanan saya</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></a></li>
+        <li><a href="#kontak"><span>Hubungi admin</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></a></li>
+      </ul>
+    </div>
+  </aside>
 </section>
 
-<form class="card toolbar" method="get" action="/" role="search">
-  <div class="field grow">
-    <label for="q">Cari produk</label>
-    <div class="search-wrap">
-      <input id="q" name="q" type="search" value="<%= filters.q %>" placeholder="Contoh: helm safety, multimeter, bor" autocomplete="off" />
-    </div>
-  </div>
-  <div class="field">
-    <label for="kategori">Kategori</label>
-    <select id="kategori" name="kategori">
-      <option value="">Semua kategori</option>
-      <% categories.forEach(function (cat) { %>
-        <option value="<%= cat.name %>" <%= filters.category === cat.name ? 'selected' : '' %>><%= cat.name %> (<%= cat.total %>)</option>
-      <% }); %>
-    </select>
-  </div>
-  <div class="field">
-    <label for="sort">Urutkan</label>
-    <select id="sort" name="sort">
-      <% sortOptions.forEach(function (option) { %>
-        <option value="<%= option.value %>" <%= filters.sort === option.value ? 'selected' : '' %>><%= option.label %></option>
-      <% }); %>
-    </select>
-  </div>
-  <div class="toolbar-actions">
-    <button class="btn btn-primary" type="submit">Terapkan</button>
-    <% if (hasFilters) { %><a class="btn btn-ghost" href="/">Reset</a><% } %>
-  </div>
-</form>
+<section class="feature-strip" id="tentang" aria-label="Keunggulan FieldsOps">
+  <article class="feature reveal">
+    <span class="feature-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="m5 7 7 4 7-4M12 11v10"/></svg>
+    </span>
+    <h3>Stok real-time</h3>
+    <p>Jumlah stok pada katalog selalu mengikuti data seller.</p>
+  </article>
+  <article class="feature reveal" style="--delay:60ms">
+    <span class="feature-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10.5h19"/></svg>
+    </span>
+    <h3>Bayar penuh atau COD</h3>
+    <p>Transfer bank, QRIS, atau bayar tunai saat barang tiba.</p>
+  </article>
+  <article class="feature reveal" style="--delay:120ms">
+    <span class="feature-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    </span>
+    <h3>Dikirim ke lokasi</h3>
+    <p>Pengiriman ke seluruh Indonesia, gratis di atas Rp 2 juta.</p>
+  </article>
+  <article class="feature reveal" style="--delay:180ms">
+    <span class="feature-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 9 9 0 0 1-3.5-.7L3 21l1.7-5A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5Z"/></svg>
+    </span>
+    <h3>Admin responsif</h3>
+    <p>Semua pesanan dikonfirmasi admin melalui WhatsApp.</p>
+  </article>
+</section>
 
-<% if (hasFilters) { %>
-  <div class="active-filters">
-    <% if (filters.q) { %>
-      <a class="filter-chip" href="/?<%= filters.category ? 'kategori=' + encodeURIComponent(filters.category) + '&' : '' %>sort=<%= filters.sort %>">
-        Pencarian: “<%= filters.q %>” <span class="filter-chip-x">×</span>
-      </a>
-    <% } %>
-    <% if (filters.category) { %>
-      <a class="filter-chip" href="/?<%= filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '' %>sort=<%= filters.sort %>">
-        Kategori: <%= filters.category %> <span class="filter-chip-x">×</span>
-      </a>
-    <% } %>
-  </div>
-<% } %>
-
-<section id="produk">
+<section class="catalog-section" id="produk">
   <div class="section-head">
     <div>
-      <h2>Produk tersedia</h2>
-      <p class="muted">Menampilkan <%= products.length %> produk dari seller aktif.</p>
+      <span class="eyebrow">Katalog</span>
+      <h2>Pilih perlengkapan yang Anda butuhkan</h2>
+      <p class="section-sub"><%= products.length %> produk dari seller aktif. Klik kartu untuk melihat detail, spesifikasi, dan metode pembayaran.</p>
     </div>
-    <% if (admin) { %>
-      <span class="pill">Admin: <%= admin.name %></span>
-    <% } %>
+    <div class="catalog-count">
+      <strong data-count="<%= products.length %>">0</strong>
+      <span>produk tampil</span>
+    </div>
   </div>
 
+  <form class="catalog-toolbar" method="get" action="/" role="search">
+    <div class="field grow">
+      <label for="q">Cari produk</label>
+      <input id="q" name="q" type="search" value="<%= filters.q %>" placeholder="Contoh: helm safety, multimeter, bor" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="kategori">Kategori</label>
+      <select id="kategori" name="kategori">
+        <option value="">Semua kategori</option>
+        <% categories.forEach(function (cat) { %>
+          <option value="<%= cat.name %>" <%= filters.category === cat.name ? 'selected' : '' %>><%= cat.name %> (<%= cat.total %>)</option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sort">Urutkan</label>
+      <select id="sort" name="sort">
+        <% sortOptions.forEach(function (option) { %>
+          <option value="<%= option.value %>" <%= filters.sort === option.value ? 'selected' : '' %>><%= option.label %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn btn-primary" type="submit">Terapkan</button>
+      <% if (hasFilters) { %><a class="btn btn-ghost" href="/">Reset</a><% } %>
+    </div>
+  </form>
+
+  <% if (hasFilters) { %>
+    <div class="active-filters">
+      <% if (filters.q) { %>
+        <a class="filter-chip" href="/?<%= filters.category ? 'kategori=' + encodeURIComponent(filters.category) + '&' : '' %>sort=<%= filters.sort %>">
+          Pencarian: “<%= filters.q %>” <span class="filter-chip-x">×</span>
+        </a>
+      <% } %>
+      <% if (filters.category) { %>
+        <a class="filter-chip" href="/?<%= filters.q ? 'q=' + encodeURIComponent(filters.q) + '&' : '' %>sort=<%= filters.sort %>">
+          Kategori: <%= filters.category %> <span class="filter-chip-x">×</span>
+        </a>
+      <% } %>
+    </div>
+  <% } %>
+
   <% if (products.length === 0) { %>
-    <div class="card empty">
+    <div class="card empty reveal">
       <div class="empty-icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       </div>
@@ -89,34 +192,123 @@
     </div>
   <% } else { %>
     <div class="grid">
-      <% products.forEach(function (p) { %>
-        <article class="pcard">
+      <% products.forEach(function (p, index) { %>
+        <article class="pcard reveal" style="--delay:<%= Math.min(index, 6) * 50 %>ms">
+          <a class="pcard-link" href="/produk/<%= p.id %>" aria-label="Lihat detail <%= p.name %>"></a>
           <div class="media">
             <img src="<%= p.image_url %>" alt="<%= p.name %>" loading="lazy" />
             <% if (p.is_featured) { %><span class="badge-featured">Unggulan</span><% } %>
+            <span class="media-cta">Lihat detail
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </span>
           </div>
           <div class="pbody">
             <span class="chip"><%= p.category_name %></span>
             <h3 class="pname"><%= p.name %></h3>
             <p class="pdesc"><%= p.description || 'Tanpa deskripsi.' %></p>
-            <p class="seller-line">Seller: <strong><%= p.seller_name %></strong> · <%= f.productCode(p.id) %></p>
+            <p class="seller-line"><%= p.seller_name %> · <%= f.productCode(p.id) %></p>
             <div class="row-end">
               <span class="price"><%= f.formatRupiah(p.price) %></span>
               <span class="stock <%= f.stockBadge(p.stock).tone %>"><%= f.stockBadge(p.stock).label %></span>
             </div>
-            <% if (p.stock > 0 && p.waUrl) { %>
-              <a class="btn-wa" href="<%= p.waUrl %>" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39a9.86 9.86 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.44 9.9-9.9 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.1.81.83-3.03-.2-.31a8.19 8.19 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.26.86 5.82 2.42a8.17 8.17 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.25 8.24Zm4.52-6.17c-.25-.12-1.47-.72-1.69-.8-.23-.09-.39-.13-.55.12-.16.25-.64.8-.79.96-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23a7.4 7.4 0 0 1-1.38-1.72c-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.41.06-.63.31-.21.25-.82.8-.82 1.96 0 1.16.84 2.27.96 2.43.12.16 1.65 2.52 4.01 3.53.56.24 1 .38 1.34.49.56.18 1.07.15 1.47.09.45-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z"/></svg>
-                Pesan via WhatsApp
-              </a>
-            <% } else { %>
-              <button class="btn-wa disabled" type="button" disabled>Stok habis</button>
-            <% } %>
+            <div class="pcard-actions">
+              <a class="btn btn-primary btn-sm" href="/checkout?produk=<%= p.id %>">Beli sekarang</a>
+              <% if (p.stock > 0 && p.waUrl) { %>
+                <a class="btn-wa btn-sm" href="<%= p.waUrl %>" target="_blank" rel="noopener" aria-label="Tanya <%= p.name %> via WhatsApp">WhatsApp</a>
+              <% } %>
+            </div>
           </div>
         </article>
       <% }); %>
     </div>
   <% } %>
+</section>
+
+<section class="section steps-section" id="cara-pesan">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Cara pesan</span>
+      <h2>Empat langkah, pesanan sampai ke lokasi</h2>
+      <p class="section-sub">Tanpa aplikasi tambahan — semua bisa diselesaikan dari browser dan WhatsApp.</p>
+    </div>
+  </div>
+  <ol class="steps">
+    <li class="step reveal">
+      <span class="step-number">01</span>
+      <h3>Pilih produk</h3>
+      <p>Buka detail produk untuk melihat spesifikasi, stok, dan seller.</p>
+    </li>
+    <li class="step reveal" style="--delay:60ms">
+      <span class="step-number">02</span>
+      <h3>Isi data pengiriman</h3>
+      <p>Lengkapi nama, WhatsApp, dan alamat lengkap pada halaman checkout.</p>
+    </li>
+    <li class="step reveal" style="--delay:120ms">
+      <span class="step-number">03</span>
+      <h3>Pilih pembayaran</h3>
+      <p>Bayar penuh melalui transfer/QRIS, atau pilih COD saat barang tiba.</p>
+    </li>
+    <li class="step reveal" style="--delay:180ms">
+      <span class="step-number">04</span>
+      <h3>Konfirmasi ke admin</h3>
+      <p>Kode pesanan otomatis dibuat; kirim konfirmasi ke admin lewat WhatsApp.</p>
+    </li>
+  </ol>
+</section>
+
+<section class="section payment-section" id="metode-pembayaran">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Pembayaran</span>
+      <h2>Dua metode, sesuai kebutuhan Anda</h2>
+      <p class="section-sub">Pilih saat checkout. Rincian biaya langsung terlihat sebelum pesanan dibuat.</p>
+    </div>
+  </div>
+  <div class="payment-grid">
+    <article class="payment-card reveal">
+      <span class="payment-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5.5" width="19" height="13" rx="3"/><path d="M2.5 10h19M6 14.5h4"/></svg>
+      </span>
+      <h3>Bayar Penuh</h3>
+      <p>Lunasi total pesanan di awal melalui transfer bank atau QRIS. Pesanan diproses setelah pembayaran diverifikasi admin.</p>
+      <ul class="payment-list">
+        <li>Transfer BCA / bank lain</li>
+        <li>QRIS untuk semua e-wallet</li>
+        <li>Status otomatis “Menunggu pembayaran”</li>
+      </ul>
+      <a class="btn btn-outline" href="#produk">Pilih produk</a>
+    </article>
+    <article class="payment-card reveal" style="--delay:80ms">
+      <span class="payment-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></svg>
+      </span>
+      <h3>COD — Bayar di Tempat</h3>
+      <p>Bayar tunai saat kurir menyerahkan barang. Praktis untuk pembelian mendadak di lokasi proyek.</p>
+      <ul class="payment-list">
+        <li>Biaya COD Rp 15.000</li>
+        <li>Pesanan langsung berstatus “Diproses”</li>
+        <li>Bayar setelah barang diperiksa</li>
+      </ul>
+      <a class="btn btn-outline" href="#produk">Pilih produk</a>
+    </article>
+  </div>
+</section>
+
+<section class="cta-band reveal">
+  <div class="cta-copy">
+    <span class="eyebrow light">Butuh bantuan memilih?</span>
+    <h2>Admin siap membantu menentukan spesifikasi yang tepat.</h2>
+    <p>Kirim kebutuhan proyek Anda, admin akan merekomendasikan produk dan metode pembayaran yang paling sesuai.</p>
+  </div>
+  <div class="cta-actions">
+    <% if (adminWa) { %>
+      <a class="btn btn-primary btn-lg" href="<%= adminWa %>" target="_blank" rel="noopener">
+        Chat admin sekarang
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    <% } %>
+    <a class="btn btn-ghost-light btn-lg" href="/#produk">Lihat katalog</a>
+  </div>
 </section>
 
 <%- include('partials/footer') %>

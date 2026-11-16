@@ -7,6 +7,7 @@ import mysqlStoreFactory from 'express-mysql-session';
 import { config } from './config.js';
 import { pool } from './db.js';
 import {
+  attachContact,
   csrfProtection,
   flashMessages,
   loadUser,
@@ -16,6 +17,7 @@ import authRoutes from './routes/auth.js';
 import catalogRoutes from './routes/catalog.js';
 import adminRoutes from './routes/admin.js';
 import sellerRoutes from './routes/seller.js';
+import shopRoutes from './routes/shop.js';
 import accountRoutes from './routes/account.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -76,6 +78,7 @@ app.use(
 );
 
 app.use(loadUser);
+app.use(attachContact);
 app.use(flashMessages);
 app.use(viewLocals);
 app.use(csrfProtection);
@@ -86,6 +89,7 @@ app.use(authRoutes);
 app.use(catalogRoutes);
 app.use('/admin', adminRoutes);
 app.use('/seller', sellerRoutes);
+app.use(shopRoutes);
 app.use(accountRoutes);
 
 app.get('/health', (req, res) => {

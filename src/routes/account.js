@@ -4,6 +4,7 @@ import { query, queryOne } from '../db.js';
 import { ah, setFlash } from '../middleware/web.js';
 import { requireAuth } from '../middleware/auth.js';
 import { formatRupiah, waLink } from '../utils/format.js';
+import { ORDER_STATUS, paymentLabel } from '../utils/checkout.js';
 
 const router = express.Router();
 
@@ -24,14 +25,27 @@ router.get(
           )
         : null;
 
+    const orders = await query(
+      `SELECT id, order_code, product_name, product_image, qty, total, payment_method,
+              payment_channel, status, created_at
+       FROM orders
+       WHERE user_id = ?
+       ORDER BY created_at DESC, id DESC
+       LIMIT 20`,
+      [req.user.id],
+    );
+
     res.render('customer/account', {
       title: 'Akun Saya',
       admin,
+      orders,
       summary,
       adminWa: waLink(
         admin?.phone,
         `Halo ${admin?.name || 'Admin'}, saya ${req.user.name} ingin bertanya mengenai produk FieldsOps.`,
       ),
+      paymentLabel,
+      ORDER_STATUS,
       errors: {},
       form: { name: req.user.name, phone: req.user.phone || '' },
     });
