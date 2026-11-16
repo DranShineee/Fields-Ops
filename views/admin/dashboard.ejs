@@ -1,0 +1,86 @@
+<%- include('../partials/head') %>
+
+<div class="view-head">
+  <div>
+    <h1>Dasbor administrator</h1>
+    <p class="muted">Ringkasan pengguna dan inventaris seluruh seller.</p>
+  </div>
+  <div class="head-actions">
+    <a class="btn" href="/admin/laporan">Laporan inventaris</a>
+    <a class="btn btn-primary" href="/admin/users/new">Tambah pengguna</a>
+  </div>
+</div>
+
+<section class="stats">
+  <article class="stat">
+    <div class="stat-row"><span>Total pengguna</span><span class="stat-icon">👥</span></div>
+    <strong><%= stats.users %></strong>
+    <p class="hint"><%= stats.sellers %> seller · <%= stats.customers %> pembeli</p>
+  </article>
+  <article class="stat">
+    <div class="stat-row"><span>Produk</span><span class="stat-icon">📦</span></div>
+    <strong><%= stats.products %></strong>
+    <p class="hint"><%= stats.active_products %> produk tampil di katalog</p>
+  </article>
+  <article class="stat">
+    <div class="stat-row"><span>Kategori</span><span class="stat-icon">🏷️</span></div>
+    <strong><%= stats.categories %></strong>
+    <p class="hint">Dikelola oleh masing-masing seller</p>
+  </article>
+  <article class="stat">
+    <div class="stat-row"><span>Total stok</span><span class="stat-icon">📊</span></div>
+    <strong><%= stats.total_stock %></strong>
+    <p class="hint"><%= stats.inactive %> akun nonaktif</p>
+  </article>
+</section>
+
+<div class="split">
+  <section class="card card-pad">
+    <div class="panel-head">
+      <h2>Pengguna terbaru</h2>
+      <a class="btn btn-sm" href="/admin/users">Kelola semua</a>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Nama</th><th>Peran</th><th>Status</th><th>Terdaftar</th></tr>
+        </thead>
+        <tbody>
+          <% recentUsers.forEach(function (user) { %>
+            <tr>
+              <td>
+                <span class="tname"><%= user.name %></span>
+                <span class="tsub"><%= user.email %></span>
+              </td>
+              <td><span class="badge badge-<%= user.role %>"><%= f.roleLabel(user.role) %></span></td>
+              <td><span class="status-dot <%= user.is_active ? 'on' : 'off' %>"><%= user.is_active ? 'Aktif' : 'Nonaktif' %></span></td>
+              <td class="muted"><%= f.formatDate(user.created_at) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <aside class="card card-pad">
+    <div class="panel-head"><h2>Seller teratas</h2></div>
+    <% if (topSellers.length === 0) { %>
+      <p class="muted">Belum ada seller terdaftar.</p>
+    <% } else { %>
+      <ul class="rank-list">
+        <% topSellers.forEach(function (seller, index) { %>
+          <li>
+            <span class="rank"><%= index + 1 %></span>
+            <div class="rank-body">
+              <strong><%= seller.name %></strong>
+              <small><%= seller.total_products %> produk · <%= seller.total_stock %> stok</small>
+            </div>
+            <a class="btn btn-sm btn-ghost" href="/admin/users/<%= seller.id %>/edit">Ubah</a>
+          </li>
+        <% }); %>
+      </ul>
+    <% } %>
+  </aside>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,41 @@
+<%- include('../partials/head') %>
+
+<div class="view-head">
+  <div>
+    <h1>Laporan inventaris</h1>
+    <p class="muted">Rekap produk dan nilai stok per seller dan kategori.</p>
+  </div>
+  <a class="btn btn-ghost" href="/admin">Kembali</a>
+</div>
+
+<section class="card">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Seller</th>
+          <th>Kategori</th>
+          <th class="num">Produk</th>
+          <th class="num">Stok</th>
+          <th class="num">Nilai stok</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (rows.length === 0) { %>
+          <tr><td colspan="5" class="table-empty">Belum ada data produk.</td></tr>
+        <% } %>
+        <% rows.forEach(function (row) { %>
+          <tr>
+            <td class="tname"><%= row.seller_name %></td>
+            <td><span class="chip"><%= row.category_name %></span></td>
+            <td class="num"><%= row.total_products %></td>
+            <td class="num"><%= row.total_stock %></td>
+            <td class="num"><strong><%= formatRupiah(row.inventory_value) %></strong></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

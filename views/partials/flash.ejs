@@ -1,0 +1,18 @@
+<% if (typeof flash !== 'undefined' && flash) { %>
+  <div class="toasts" id="toasts" role="status" aria-live="polite">
+    <div class="toast toast-<%= flash.type %>" data-toast>
+      <span class="toast-icon"><%= flash.type === 'success' ? '✓' : (flash.type === 'error' ? '!' : 'i') %></span>
+      <span><%= flash.message %></span>
+      <button type="button" class="toast-close" aria-label="Tutup notifikasi" data-toast-close>×</button>
+    </div>
+  </div>
+<% } %>
+<% if (typeof notice !== 'undefined' && notice) { %>
+  <div class="toasts" id="toasts" role="status" aria-live="polite">
+    <div class="toast toast-<%= notice.type %>" data-toast>
+      <span class="toast-icon"><%= notice.type === 'success' ? '✓' : (notice.type === 'error' ? '!' : 'i') %></span>
+      <span><%= notice.message %></span>
+      <button type="button" class="toast-close" aria-label="Tutup notifikasi" data-toast-close>×</button>
+    </div>
+  </div>
+<% } %>

@@ -1,0 +1,13 @@
+<%- include('partials/head') %>
+
+<div class="card empty error-state">
+  <p class="error-code"><%= status %></p>
+  <h1><%= title %></h1>
+  <p class="muted"><%= message %></p>
+  <div class="empty-actions">
+    <a class="btn btn-primary" href="/">Kembali ke katalog</a>
+    <% if (!currentUser) { %><a class="btn" href="/login">Masuk</a><% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

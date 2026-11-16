@@ -1,0 +1,17 @@
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© <%= currentYear %> FieldsOps. Marketplace layanan &amp; peralatan lapangan.</span>
+      <span class="footer-links">
+        <a href="/">Katalog</a>
+        <% if (!currentUser) { %><a href="/login">Masuk</a><% } %>
+        <a href="/health">Status layanan</a>
+      </span>
+    </div>
+  </footer>
+</main>
+
+<div class="toasts" id="toast-root" aria-live="polite"></div>
+
+<script src="/js/app.js" defer></script>
+</body>
+</html>

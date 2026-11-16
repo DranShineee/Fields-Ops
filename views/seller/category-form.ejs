@@ -1,0 +1,39 @@
+<%- include('../partials/head') %>
+
+<div class="view-head">
+  <div>
+    <h1>Ubah kategori</h1>
+    <p class="muted">Perbarui nama atau deskripsi kategori <%= category.name %>.</p>
+  </div>
+  <a class="btn btn-ghost" href="/seller/categories">Kembali</a>
+</div>
+
+<section class="card card-pad form-card narrow">
+  <form method="post" action="/seller/categories/<%= category.id %>" class="stack" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+    <div class="field">
+      <label for="name">Nama kategori</label>
+      <input id="name" name="name" type="text" value="<%= form.name %>" maxlength="80" required aria-invalid="<%= errors.name ? 'true' : 'false' %>" />
+      <% if (errors.name) { %><p class="field-error"><%= errors.name %></p><% } %>
+    </div>
+
+    <div class="field">
+      <label for="description">Deskripsi</label>
+      <textarea id="description" name="description" rows="3" maxlength="240" aria-invalid="<%= errors.description ? 'true' : 'false' %>"><%= form.description || '' %></textarea>
+      <% if (errors.description) { %><p class="field-error"><%= errors.description %></p><% } %>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" name="is_active" value="1" <%= form.is_active ? 'checked' : '' %> />
+      <span>Aktif dan tampil sebagai filter katalog</span>
+    </label>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">Simpan perubahan</button>
+      <a class="btn" href="/seller/categories">Batal</a>
+    </div>
+  </form>
+</section>
+
+<%- include('../partials/footer') %>

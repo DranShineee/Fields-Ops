@@ -1,0 +1,72 @@
+<%- include('../partials/head') %>
+
+<div class="view-head">
+  <div>
+    <h1>Kategori saya</h1>
+    <p class="muted">Kategori dipakai untuk mengelompokkan produk di katalog publik.</p>
+  </div>
+  <a class="btn btn-ghost" href="/seller/products">Lihat produk</a>
+</div>
+
+<div class="split">
+  <section class="card card-pad">
+    <div class="panel-head"><h2>Tambah kategori</h2></div>
+    <form method="post" action="/seller/categories" class="stack" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div class="field">
+        <label for="name">Nama kategori</label>
+        <input id="name" name="name" type="text" value="<%= form.name %>" maxlength="80" required aria-invalid="<%= errors.name ? 'true' : 'false' %>" />
+        <% if (errors.name) { %><p class="field-error"><%= errors.name %></p><% } %>
+      </div>
+      <div class="field">
+        <label for="description">Deskripsi <span class="label-hint">(opsional)</span></label>
+        <textarea id="description" name="description" rows="3" maxlength="240" aria-invalid="<%= errors.description ? 'true' : 'false' %>"><%= form.description %></textarea>
+        <% if (errors.description) { %><p class="field-error"><%= errors.description %></p><% } %>
+      </div>
+      <label class="check">
+        <input type="checkbox" name="is_active" value="1" <%= form.is_active ? 'checked' : '' %> />
+        <span>Aktif dan tampil sebagai filter katalog</span>
+      </label>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Tambah kategori</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr><th>Kategori</th><th class="num">Produk</th><th>Status</th><th class="num">Aksi</th></tr>
+        </thead>
+        <tbody>
+          <% if (categories.length === 0) { %>
+            <tr><td colspan="4" class="table-empty">Belum ada kategori.</td></tr>
+          <% } %>
+          <% categories.forEach(function (category) { %>
+            <tr>
+              <td>
+                <span class="tname"><%= category.name %></span>
+                <span class="tsub"><%= category.description || 'Tanpa deskripsi' %></span>
+              </td>
+              <td class="num"><%= category.total_products %></td>
+              <td>
+                <span class="status-dot <%= category.is_active ? 'on' : 'off' %>"><%= category.is_active ? 'Aktif' : 'Nonaktif' %></span>
+              </td>
+              <td class="actions">
+                <a class="btn btn-sm" href="/seller/categories/<%= category.id %>/edit">Ubah</a>
+                <form method="post" action="/seller/categories/<%= category.id %>/delete" class="inline-form"
+                      data-confirm="Hapus kategori “<%= category.name %>”?">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                  <button class="btn btn-sm danger" type="submit">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

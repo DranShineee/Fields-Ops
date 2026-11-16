@@ -1,0 +1,67 @@
+<%- include('../partials/head') %>
+
+<div class="view-head">
+  <div>
+    <h1><%= mode === 'create' ? 'Tambah pengguna' : 'Ubah pengguna' %></h1>
+    <p class="muted">
+      <% if (mode === 'create') { %>Buat akun baru dengan peran admin, seller, atau pembeli.
+      <% } else { %>Perbarui data <%= target.name %> (<%= target.email %>).<% } %>
+    </p>
+  </div>
+  <a class="btn btn-ghost" href="/admin/users">Kembali</a>
+</div>
+
+<section class="card card-pad form-card">
+  <form method="post" action="<%= mode === 'create' ? '/admin/users' : '/admin/users/' + target.id %>" class="stack" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="name">Nama lengkap / nama toko</label>
+        <input id="name" name="name" type="text" value="<%= form.name %>" required aria-invalid="<%= errors.name ? 'true' : 'false' %>" />
+        <% if (errors.name) { %><p class="field-error"><%= errors.name %></p><% } %>
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" value="<%= form.email %>" required aria-invalid="<%= errors.email ? 'true' : 'false' %>" />
+        <% if (errors.email) { %><p class="field-error"><%= errors.email %></p><% } %>
+      </div>
+
+      <div class="field">
+        <label for="phone">Nomor WhatsApp</label>
+        <input id="phone" name="phone" type="tel" value="<%= form.phone || '' %>" placeholder="08xxxxxxxxxx" aria-invalid="<%= errors.phone ? 'true' : 'false' %>" />
+        <% if (errors.phone) { %><p class="field-error"><%= errors.phone %></p><% } %>
+      </div>
+
+      <div class="field">
+        <label for="role">Peran</label>
+        <select id="role" name="role" aria-invalid="<%= errors.role ? 'true' : 'false' %>">
+          <% ['admin', 'seller', 'customer'].forEach(function (role) { %>
+            <option value="<%= role %>" <%= form.role === role ? 'selected' : '' %>><%= f.roleLabel(role) %></option>
+          <% }); %>
+        </select>
+        <% if (errors.role) { %><p class="field-error"><%= errors.role %></p><% } %>
+      </div>
+
+      <div class="field span-2">
+        <label for="password"><%= mode === 'create' ? 'Kata sandi' : 'Kata sandi baru (opsional)' %></label>
+        <input id="password" name="password" type="password" autocomplete="new-password" <%= mode === 'create' ? 'required' : '' %> aria-invalid="<%= errors.password ? 'true' : 'false' %>" />
+        <% if (errors.password) { %><p class="field-error"><%= errors.password %></p><% } else { %><p class="hint">Minimal 8 karakter. <% if (mode === 'edit') { %>Kosongkan bila tidak ingin mengubah.<% } %></p><% } %>
+      </div>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" name="is_active" value="1" <%= form.is_active ? 'checked' : '' %> />
+      <span>Akun aktif dan boleh masuk</span>
+    </label>
+    <% if (errors.is_active) { %><p class="field-error"><%= errors.is_active %></p><% } %>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit"><%= mode === 'create' ? 'Simpan pengguna' : 'Simpan perubahan' %></button>
+      <a class="btn" href="/admin/users">Batal</a>
+    </div>
+  </form>
+</section>
+
+<%- include('../partials/footer') %>
