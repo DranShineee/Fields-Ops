@@ -5,3 +5,6 @@ public/uploads/*
 npm-debug.log*
 *.log
 .DS_Store
+
+.vercel
+storage/

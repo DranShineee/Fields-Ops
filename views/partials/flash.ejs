@@ -1,18 +1,16 @@
 <% if (typeof flash !== 'undefined' && flash) { %>
-  <div class="toasts" id="toasts" role="status" aria-live="polite">
-    <div class="toast toast-<%= flash.type %>" data-toast>
-      <span class="toast-icon"><%= flash.type === 'success' ? '✓' : (flash.type === 'error' ? '!' : 'i') %></span>
-      <span><%= flash.message %></span>
-      <button type="button" class="toast-close" aria-label="Tutup notifikasi" data-toast-close>×</button>
+  <div class="flash flash-<%= flash.type %>" role="status">
+    <div>
+      <span class="flash-label"><%= flash.type === 'success' ? 'Berhasil' : flash.type === 'error' ? 'Perlu diperiksa' : 'Informasi' %></span>
+      <%= flash.message %>
     </div>
   </div>
 <% } %>
 <% if (typeof notice !== 'undefined' && notice) { %>
-  <div class="toasts" id="toasts" role="status" aria-live="polite">
-    <div class="toast toast-<%= notice.type %>" data-toast>
-      <span class="toast-icon"><%= notice.type === 'success' ? '✓' : (notice.type === 'error' ? '!' : 'i') %></span>
-      <span><%= notice.message %></span>
-      <button type="button" class="toast-close" aria-label="Tutup notifikasi" data-toast-close>×</button>
+  <div class="flash flash-<%= notice.type %>" role="status">
+    <div>
+      <span class="flash-label">Catatan</span>
+      <%= notice.message %>
     </div>
   </div>
 <% } %>

@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
-import { queryOne } from '../db.js';
-import { attachAdminContact } from '../utils/contact.js';
+import { query, queryOne } from '../db.js';
+import { getSettings } from '../utils/settings.js';
 import * as format from '../utils/format.js';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -37,6 +37,43 @@ export async function loadUser(req, res, next) {
   }
 }
 
+/** Konteks bersama: pengaturan platform, kategori nav, notifikasi, profil teknisi. */
+export async function attachContext(req, res, next) {
+  try {
+    const settings = await getSettings();
+    res.locals.settings = settings;
+    res.locals.navCategories = await query(
+      'SELECT id, name, slug, icon FROM categories WHERE is_active = 1 ORDER BY sort_order, name',
+    );
+    res.locals.unreadCount = 0;
+    res.locals.technician = null;
+
+    if (req.session?.user) {
+      const row = await queryOne(
+        'SELECT COUNT(*) AS total FROM notifications WHERE user_id = ? AND is_read = 0',
+        [req.session.user.id],
+      );
+      res.locals.unreadCount = Number(row?.total || 0);
+
+      if (req.session.user.role === 'technician') {
+        const profile = await queryOne('SELECT * FROM technician_profiles WHERE user_id = ? LIMIT 1', [
+          req.session.user.id,
+        ]);
+        req.technician = profile;
+        res.locals.technician = profile;
+      }
+    }
+
+    res.locals.adminContact = {
+      email: settings.support_email,
+      phone: settings.support_whatsapp,
+    };
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
 function hasValidCsrfToken(req) {
   const token = (req.body && req.body._csrf) || req.get('x-csrf-token') || '';
   const expected = req.session.csrfToken || '';
@@ -57,9 +94,8 @@ function rejectCsrf(res) {
 }
 
 /**
- * Token CSRF per sesi. Request multipart (`multipart/form-data`) belum memiliki
- * body pada tahap ini, sehingga verifikasinya dilakukan setelah multer lewat
- * `verifyCsrf`.
+ * Token CSRF per sesi. Request multipart belum memiliki body pada tahap ini,
+ * sehingga verifikasinya dilakukan setelah multer lewat `verifyCsrf`.
  */
 export function csrfProtection(req, res, next) {
   if (!req.session.csrfToken) {
@@ -73,14 +109,12 @@ export function csrfProtection(req, res, next) {
   next();
 }
 
-/** Verifikasi CSRF untuk request yang body-nya baru tersedia setelah multer. */
 export function verifyCsrf(req, res, next) {
   if (SAFE_METHODS.has(req.method)) return next();
   if (!hasValidCsrfToken(req)) return rejectCsrf(res);
   next();
 }
 
-/** Ambil dan bersihkan pesan flash dari sesi. */
 export function flashMessages(req, res, next) {
   res.locals.flash = req.session.flash || null;
   delete req.session.flash;
@@ -93,15 +127,18 @@ export function setFlash(req, type, message) {
   req.session.flash = { type, message };
 }
 
-/** Variabel yang tersedia di semua template. */
-export const attachContact = attachAdminContact;
-
 export function viewLocals(req, res, next) {
   res.locals.currentPath = req.path;
+  res.locals.currentUrl = req.originalUrl;
   res.locals.currentYear = new Date().getFullYear();
   res.locals.appName = 'FieldsOps';
   res.locals.formatters = format;
   res.locals.f = format;
+  /* Sejumlah template memanggil formatRupiah secara langsung. */
+  res.locals.formatRupiah = format.formatRupiah;
+  res.locals.statusBadge = format.statusBadge;
+  res.locals.label = format.label;
   res.locals.isProduction = process.env.NODE_ENV === 'production';
+  res.locals.bodyClass = '';
   next();
 }

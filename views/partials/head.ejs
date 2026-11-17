@@ -4,67 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><%= title ? title + ' — FieldsOps' : 'FieldsOps' %></title>
-  <meta name="description" content="FieldsOps — marketplace peralatan, safety, dan jasa lapangan. Bayar penuh atau COD, pesanan diproses langsung oleh admin." />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'FieldsOps menghubungkan Anda dengan teknisi terverifikasi untuk AC, sepeda motor, komputer, dan sepeda. Pesan layanan, tentukan jadwal, pantau pekerjaan.' %>" />
+  <meta name="theme-color" content="#f8f9fa" />
+  <meta name="color-scheme" content="light" />
   <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/app.css" />
 </head>
-<body>
+<body class="<%= bodyClass %>">
 <a href="#main" class="skip-link">Langsung ke konten</a>
-
-<header class="site-header" data-header>
-  <div class="header-shell">
-    <a class="brand" href="/" aria-label="FieldsOps — beranda">
-      <span class="logo-mark" aria-hidden="true">FO</span>
-      <span class="brand-text">
-        <strong>FieldsOps</strong>
-        <small>Marketplace Lapangan</small>
-      </span>
-    </a>
-
-    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="main-nav">
-      <span class="nav-toggle-bar"></span>
-      <span class="nav-toggle-bar"></span>
-      <span class="sr-only">Buka menu navigasi</span>
-    </button>
-
-    <nav class="main-nav" id="main-nav" data-nav aria-label="Navigasi utama">
-      <a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">Katalog</a>
-
-      <% if (currentUser && currentUser.role === 'admin') { %>
-        <a href="/admin" class="nav-link <%= currentPath.startsWith('/admin') && !currentPath.startsWith('/admin/users') && currentPath !== '/admin/laporan' ? 'active' : '' %>">Dasbor</a>
-        <a href="/admin/users" class="nav-link <%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">Pengguna</a>
-        <a href="/admin/laporan" class="nav-link <%= currentPath === '/admin/laporan' ? 'active' : '' %>">Laporan</a>
-      <% } else if (currentUser && currentUser.role === 'seller') { %>
-        <a href="/seller" class="nav-link <%= currentPath === '/seller' ? 'active' : '' %>">Dasbor</a>
-        <a href="/seller/products" class="nav-link <%= currentPath.startsWith('/seller/products') ? 'active' : '' %>">Produk</a>
-        <a href="/seller/categories" class="nav-link <%= currentPath.startsWith('/seller/categories') ? 'active' : '' %>">Kategori</a>
-      <% } %>
-
-      <a href="/#cara-pesan" class="nav-link">Cara Pesan</a>
-      <a href="/#kontak" class="nav-link">Kontak</a>
-    </nav>
-
-    <div class="header-actions">
-      <% if (currentUser) { %>
-        <a href="/akun" class="user-chip" title="Akun saya">
-          <span class="avatar" aria-hidden="true"><%= currentUser.name.trim().charAt(0).toUpperCase() %></span>
-          <span class="user-meta">
-            <strong><%= currentUser.name %></strong>
-            <small><%= f.roleLabel(currentUser.role) %></small>
-          </span>
-        </a>
-        <form method="post" action="/logout" class="inline-form">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <button type="submit" class="btn btn-ghost btn-sm">Keluar</button>
-        </form>
-      <% } else { %>
-        <a href="/login" class="nav-link nav-login">Masuk</a>
-        <a href="/register" class="btn btn-primary btn-sm">Daftar</a>
-      <% } %>
-    </div>
-  </div>
-</header>
-
-<main id="main" class="page wrap">
-  <%- include('flash') %>

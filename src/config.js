@@ -24,10 +24,14 @@ export const config = {
     connectionLimit: toInt(process.env.DB_POOL, 10),
   },
   uploads: {
-    dir: 'public/uploads',
+    dir: process.env.UPLOAD_DIR || 'public/uploads',
     publicPath: '/uploads',
-    maxBytes: 3 * 1024 * 1024,
+    maxBytes: toInt(process.env.UPLOAD_MAX_BYTES, 3 * 1024 * 1024),
   },
+  /** Folder berkas privat (bukti bayar, dokumen, bukti pekerjaan). */
+  privateStorage: process.env.STORAGE_DIR || 'storage/private',
+  /** Vercel/Lambda: filesystem hanya bisa ditulis di /tmp dan bersifat sementara. */
+  isServerless: Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME),
 };
 
 if (isProduction && config.sessionSecret === 'fieldsops-development-secret-change-me') {

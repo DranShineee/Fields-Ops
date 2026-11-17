@@ -10,7 +10,11 @@
   },
   "scripts": {
     "start": "node src/server.js",
+    "build": "npm run css:build",
+    "css:build": "tailwindcss -i ./src/styles/tailwind.css -o ./public/css/app.css --minify",
     "dev": "node --watch src/server.js",
+    "test:e2e": "node scripts/e2e.mjs",
+    "test:links": "node scripts/links.mjs",
     "migrate": "node db/migrate.js",
     "seed": "node db/migrate.js --seed",
     "db:reset": "node db/migrate.js --fresh --seed"
@@ -24,5 +28,8 @@
     "express-session": "^1.18.1",
     "multer": "^2.0.1",
     "mysql2": "^3.14.3"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
   }
 }

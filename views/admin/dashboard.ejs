@@ -1,86 +1,119 @@
-<%- include('../partials/head') %>
+<%- include('../partials/panel-start', { panelTitle: 'Dasbor admin', panelSub: 'Antrean verifikasi, booking, dan pembayaran yang perlu tindakan hari ini.' }) %>
 
-<div class="view-head">
-  <div>
-    <h1>Dasbor administrator</h1>
-    <p class="muted">Ringkasan pengguna dan inventaris seluruh seller.</p>
+<div class="flex-between mb-2">
+  <div class="flex-wrap">
+    <a class="btn btn-outline btn-sm" href="/admin/verifikasi">Verifikasi teknisi <% if (counts.verifications) { %>(<%= counts.verifications %>)<% } %></a>
+    <a class="btn btn-outline btn-sm" href="/admin/transaksi">Pembayaran <em style="font-style:normal;color:var(--clay)"><%= counts.payments %></em></a>
+    <a class="btn btn-outline btn-sm" href="/admin/work-order">Tinjau pekerjaan <em style="font-style:normal;color:var(--clay)"><%= counts.reviews %></em></a>
+    <a class="btn btn-outline btn-sm" href="/admin/keluhan">Keluhan <em style="font-style:normal;color:var(--clay)"><%= counts.complaints %></em></a>
   </div>
-  <div class="head-actions">
-    <a class="btn" href="/admin/laporan">Laporan inventaris</a>
-    <a class="btn btn-primary" href="/admin/users/new">Tambah pengguna</a>
+  <a class="btn btn-primary btn-sm" href="/admin/booking">Kelola booking</a>
+</div>
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <span class="stat-card-value" style="font-size:1.25rem"><%= f.formatRupiah(revenue.paid || 0) %></span>
+    <span class="stat-card-label">Total pembayaran lunas</span>
+    <span class="stat-card-note">Bulan ini <%= f.formatRupiah(revenue.this_month || 0) %></span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-card-value"><%= bookingStats.total || 0 %></span>
+    <span class="stat-card-label">Booking</span>
+    <span class="stat-card-note"><%= bookingStats.completed || 0 %> selesai · <%= bookingStats.cancelled || 0 %> batal</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-card-value"><%= counts.unassigned || 0 %></span>
+    <span class="stat-card-label">Service order tanpa teknisi</span>
+    <span class="stat-card-note">Perlu penugasan</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-card-value"><%= counts.payments || 0 %></span>
+    <span class="stat-card-label">Menunggu verifikasi bayar</span>
+    <span class="stat-card-note">Cek bukti transfer</span>
   </div>
 </div>
 
-<section class="stats">
-  <article class="stat">
-    <div class="stat-row"><span>Total pengguna</span><span class="stat-icon">👥</span></div>
-    <strong><%= stats.users %></strong>
-    <p class="hint"><%= stats.sellers %> seller · <%= stats.customers %> pembeli</p>
-  </article>
-  <article class="stat">
-    <div class="stat-row"><span>Produk</span><span class="stat-icon">📦</span></div>
-    <strong><%= stats.products %></strong>
-    <p class="hint"><%= stats.active_products %> produk tampil di katalog</p>
-  </article>
-  <article class="stat">
-    <div class="stat-row"><span>Kategori</span><span class="stat-icon">🏷️</span></div>
-    <strong><%= stats.categories %></strong>
-    <p class="hint">Dikelola oleh masing-masing seller</p>
-  </article>
-  <article class="stat">
-    <div class="stat-row"><span>Total stok</span><span class="stat-icon">📊</span></div>
-    <strong><%= stats.total_stock %></strong>
-    <p class="hint"><%= stats.inactive %> akun nonaktif</p>
-  </article>
-</section>
-
 <div class="split">
-  <section class="card card-pad">
-    <div class="panel-head">
-      <h2>Pengguna terbaru</h2>
-      <a class="btn btn-sm" href="/admin/users">Kelola semua</a>
-    </div>
-    <div class="table-wrap">
-      <table class="table">
-        <thead>
-          <tr><th>Nama</th><th>Peran</th><th>Status</th><th>Terdaftar</th></tr>
-        </thead>
-        <tbody>
-          <% recentUsers.forEach(function (user) { %>
-            <tr>
-              <td>
-                <span class="tname"><%= user.name %></span>
-                <span class="tsub"><%= user.email %></span>
-              </td>
-              <td><span class="badge badge-<%= user.role %>"><%= f.roleLabel(user.role) %></span></td>
-              <td><span class="status-dot <%= user.is_active ? 'on' : 'off' %>"><%= user.is_active ? 'Aktif' : 'Nonaktif' %></span></td>
-              <td class="muted"><%= f.formatDate(user.created_at) %></td>
-            </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div>
+    <section class="surface mb-2">
+      <div class="surface-head">
+        <h2>Booking terbaru</h2>
+        <a class="text-link tiny" href="/admin/booking">Semua booking</a>
+      </div>
+      <div class="surface-body">
+        <% if (recentBookings.length === 0) { %>
+          <p class="small muted mb-0">Belum ada booking.</p>
+        <% } else { %>
+          <div class="table-wrap" style="border:0">
+            <table class="table">
+              <thead><tr><th>Kode</th><th>Customer</th><th>Jadwal</th><th>Status</th><th>Bayar</th></tr></thead>
+              <tbody>
+                <% recentBookings.forEach((booking) => { %>
+                  <tr>
+                    <td><a class="link mono" href="/admin/booking/<%= booking.code %>"><%= booking.code %></a><span class="table-note"><%= booking.item_count %> layanan</span></td>
+                    <td><%= booking.customer_name %><span class="table-note"><%= booking.city %></span></td>
+                    <td class="small"><%= f.formatDate(booking.scheduled_date) %><span class="table-note"><%= f.formatTime(booking.scheduled_time) %></span></td>
+                    <td><%- f.statusBadge(f.BOOKING_STATUS, booking.status) %></td>
+                    <td><%- f.statusBadge(f.PAYMENT_STATUS, booking.payment_status) %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+    </section>
 
-  <aside class="card card-pad">
-    <div class="panel-head"><h2>Seller teratas</h2></div>
-    <% if (topSellers.length === 0) { %>
-      <p class="muted">Belum ada seller terdaftar.</p>
-    <% } else { %>
-      <ul class="rank-list">
-        <% topSellers.forEach(function (seller, index) { %>
-          <li>
-            <span class="rank"><%= index + 1 %></span>
-            <div class="rank-body">
-              <strong><%= seller.name %></strong>
-              <small><%= seller.total_products %> produk · <%= seller.total_stock %> stok</small>
+    <section class="surface">
+      <div class="surface-head"><h2>Service order belum ditugaskan</h2><span class="chip"><%= pending.length %></span></div>
+      <div class="surface-body">
+        <% if (pending.length === 0) { %>
+          <p class="small muted mb-0">Semua service order sudah punya teknisi.</p>
+        <% } else { %>
+          <% pending.forEach((order) => { %>
+            <div class="flex-between" style="padding:.55rem 0;border-bottom:1px solid var(--line)">
+              <div class="small">
+                <strong><%= order.service_name %></strong>
+                <span class="table-note"><%= order.code %> · <%= order.category_name %> · <%= f.formatDate(order.scheduled_date) %></span>
+              </div>
+              <a class="btn btn-outline btn-sm" href="/admin/booking/<%= order.code %>">Tugaskan</a>
             </div>
-            <a class="btn btn-sm btn-ghost" href="/admin/users/<%= seller.id %>/edit">Ubah</a>
-          </li>
+          <% }); %>
+        <% } %>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <section class="surface mb-2">
+      <div class="surface-head"><h2>Teknisi paling produktif</h2></div>
+      <div class="surface-body">
+        <% if (topTechs.length === 0) { %>
+          <p class="small muted mb-0">Belum ada teknisi disetujui.</p>
+        <% } else { %>
+          <% topTechs.forEach((tech) => { %>
+            <div class="flex-between" style="padding:.45rem 0;border-bottom:1px solid var(--line)">
+              <span class="small"><%= tech.name %><span class="table-note"><%= tech.jobs %> pekerjaan · ★ <%= tech.rating %>​</span></span>
+              <%- f.statusBadge(f.TECHNICIAN_STATUS, tech.status) %>
+            </div>
+          <% }); %>
+        <% } %>
+        <a class="text-link mt-2" href="/admin/teknisi">Data teknisi →</a>
+      </div>
+    </section>
+
+    <section class="surface">
+      <div class="surface-head"><h2>Aktivitas terakhir</h2><a class="text-link tiny" href="/admin/audit">Audit</a></div>
+      <div class="surface-body">
+        <% recentAudit.forEach((row) => { %>
+          <div style="padding:.4rem 0;border-bottom:1px solid var(--line)">
+            <span class="small"><%= row.description %></span>
+            <span class="table-note"><%= row.actor_name || 'sistem' %> · <%= f.formatDateTime(row.created_at) %></span>
+          </div>
         <% }); %>
-      </ul>
-    <% } %>
+      </div>
+    </section>
   </aside>
 </div>
 
-<%- include('../partials/footer') %>
+<%- include('../partials/panel-end') %>
