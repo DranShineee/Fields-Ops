@@ -8,3 +8,6 @@ npm-debug.log*
 
 .vercel
 storage/
+
+.env.*
+!.env.example

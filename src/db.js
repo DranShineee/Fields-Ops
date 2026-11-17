@@ -1,3 +1,4 @@
+
 import mysql from 'mysql2/promise';
 import { config } from './config.js';
 
@@ -12,8 +13,6 @@ export const pool = mysql.createPool({
   decimalNumbers: true,
   dateStrings: false,
   supportBigNumbers: true,
-  // Serverless (Vercel) membuat banyak instance singkat: batasi koneksi idle,
-  // jaga keep-alive, dan lepaskan koneksi yang menganggur lebih cepat.
   maxIdle: Math.max(1, Math.min(2, config.db.connectionLimit)),
   idleTimeout: 60_000,
   enableKeepAlive: true,
