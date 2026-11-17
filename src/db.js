@@ -2,12 +2,17 @@
 import mysql from 'mysql2/promise';
 import { config } from './config.js';
 
+const useTls = process.env.TIDB_ENABLE_SSL === 'true';
+
+if (config.isProduction && !useTls) {
+  throw new Error('TIDB_ENABLE_SSL wajib bernilai true di production.');
+}
+
 export const pool = mysql.createPool({
   ...config.db,
-  ssl: {
-    minVersion: 'TLSv1.2',
-    rejectUnauthorized: true,
-  },
+  ssl: useTls
+    ? { minVersion: 'TLSv1.2' }
+    : undefined,
   waitForConnections: true,
   queueLimit: 0,
   charset: 'utf8mb4_unicode_ci',
