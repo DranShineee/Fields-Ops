@@ -3,6 +3,9 @@ import { config } from './config.js';
 
 export const pool = mysql.createPool({
   ...config.db,
+  ssl: {
+    minVersion: 'TLSv1.2',
+  },
   waitForConnections: true,
   queueLimit: 0,
   charset: 'utf8mb4_unicode_ci',
